@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 
 export const resStatus = (req, res, data, code = 200) => res.send({
 	data,

@@ -10,17 +10,18 @@ export const fetchUserData = async (req, res) => {
 	} catch (err) {
 		return resError(req, res, { err: ' sorry can not fetch user data' });
 	}
-}
+};
 
 // fetch userdata by id 
 export const fetchUserById = async (req, res) => {
 	try {
 		const { id } = req.params; // get id from params
+
 		const user = await User.findById(id); // fetch user data by id
-		console.log(user);
+
 		return resStatus(req, res, { user }); // send user data
 	} catch (err) {
-		return resError(req, res, {	err : 'sorry can not fetch user data' });
+		return resError(req, res, { err: 'sorry can not fetch user data' });
 	}
 }
 
@@ -28,28 +29,34 @@ export const fetchUserById = async (req, res) => {
 export const sendUserData = async (req, res) => {
 	try {
 		const { name, email, password, mobile, garageName, garageAddress } = req.body;
-		
+
 		// check if email is already exist
 		const user = await User.findOne({ email });
+
 		if (user) {
 			return resError(req, res, { err: 'Email already exists' });
 		}
 
-		// hashing password with bcrypt
-		const hash = await bcrypt.genSalt(password, 10);
+		// promise for hash password, name, email, mobile, garageName, garageAddress and create user
+		const [hashPassword, hashMobile, hashGarageName, hashGarageAddress] = await Promise.all([
+			bcrypt.hash(password, 10),
+			bcrypt.hash(mobile, 10),
+			bcrypt.hash(garageName, 10),
+			bcrypt.hash(garageAddress, 10),
+		]);
 
-		// create new user
 		const newUser = new User({
 			name,
 			email,
-			password: hash,
-			mobile,
-			garageName,
-			garageAddress
+			password: hashPassword,
+			mobile: hashMobile,
+			garageName: hashGarageName,
+			garageAddress: hashGarageAddress
 		});
 
-		// save user
-		await newUser.save();
+		await newUser.save(); // save user data
+		console.log(newUser);
+
 		return resStatus(req, res, { newUser });
 	} catch (error) {
 		return resError(req, res, { err: 'Data is not inserted' });
@@ -59,8 +66,18 @@ export const sendUserData = async (req, res) => {
 // delete the user
 export const deleteUserData = async (req, res) => {
 	try {
-		const {id} = req.body;
+		const { id } = req.body;
 		const user = await User.findByIdAndDelete(id);
+		return resStatus(req, res, { user });
+	} catch (err) {
+		return resError(req, res, { err: 'sorry can not delete user' });
+	}
+};
+
+// delte all user
+export const deleteAllUserData = async (req, res) => {
+	try {
+		const user = await User.deleteMany();
 		return resStatus(req, res, { user });
 	} catch (err) {
 		return resError(req, res, { err: 'sorry can not delete user' });
@@ -71,18 +88,18 @@ export const deleteUserData = async (req, res) => {
 export const updateUserData = async (req, res) => {
 	try {
 		const { name, email, password, mobile, garageName, garageAddress } = req.body;
-		const user = await User.findOneAndUpdate({id : req.params.id}, {
+		const user = await User.findOneAndUpdate({ id: req.params.id }, {
 			$set: {
-			name,
-			email,
-			password,
-			mobile,
-			garageName,
-			garageAddress
+				name,
+				email,
+				password,
+				mobile,
+				garageName,
+				garageAddress
 			}
 		});
 		return resStatus(req, res, { user });
 	} catch (error) {
 		return resError(req, res, { err: 'sorry can not update user' });
-	}	
+	}
 };
