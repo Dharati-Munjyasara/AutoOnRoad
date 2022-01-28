@@ -1,6 +1,13 @@
 import express from 'express';
 
-import { sendUserData, fetchUserData, fetchUserById, deleteUserData, updateUserData, deleteAllUserData } from '../controllers/auth.js';
+import {
+	sendUserData,
+	fetchUserData,
+	fetchUserById,
+	deleteUserData,
+	updateUserData,
+	deleteAllUserData,
+} from '../controllers/auth.js';
 
 const router = express.Router();
 
