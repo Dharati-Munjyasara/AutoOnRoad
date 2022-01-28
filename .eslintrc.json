@@ -21,7 +21,10 @@
         "camelcase": 1,
         "semi": 1,
         "max-len": [
-            1,
+            {
+                "ignoreUrls": true,
+                "code": 2
+            }
         ],
         "no-else-return": 1,
         "no-underscore-dangle": [

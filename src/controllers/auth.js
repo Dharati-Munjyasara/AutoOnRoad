@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import bcrypt from 'bcrypt'; // import bcryptjs
 import User from '../models/userModel'; // import user model
 import isEmail from 'validator/lib/isEmail';

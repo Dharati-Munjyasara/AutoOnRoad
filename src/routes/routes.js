@@ -8,6 +8,7 @@ import {
 	updateUserData,
 	deleteAllUserData,
 	authenticateUser
+
 } from '../controllers/auth.js';
 
 const router = express.Router();
