@@ -1,9 +1,17 @@
 import express from 'express';
 
-import { fetchUserData } from '../controllers/auth.js';
+import {sendUserData, fetchUserData, fetchUserById , deleteUserData, updateUserData} from '../controllers/auth.js';
 
 const router = express.Router();
 
-router.get('/', fetchUserData);
+router.get('/fetchUserData', fetchUserData); // fetch user data
+
+router.get('/fetchUserById/:id', fetchUserById); // fetch user by id 
+
+router.post('/sendUserData', sendUserData); // send user data
+
+router.delete('/deleteUserData/:id', deleteUserData); // delete user
+
+router.put('/updateUserData/:id', updateUserData); // update user
 
 export default router;

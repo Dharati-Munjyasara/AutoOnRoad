@@ -1,6 +1,8 @@
 // create schema for user model
-const mongoose = require('mongoose');
-const { Schema , model } = mongoose;
+import mongoose from 'mongoose';
+import { validateEmail } from '../utils/utilFunction'; // for send status function
+
+const { Schema, model } = mongoose;
 
 const userSchema = new Schema({
 	name: {
@@ -9,7 +11,11 @@ const userSchema = new Schema({
 	},
 	email: {
 		type: String,
-		required: true
+		trim: true,
+		lowercase: true,
+		unique: true,
+		required: true,
+		validate: [validateEmail, 'Please fill a valid email address'],
 	},
 	password: {
 		type: String,
