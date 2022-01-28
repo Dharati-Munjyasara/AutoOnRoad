@@ -7,6 +7,7 @@ import {
 	deleteUserData,
 	updateUserData,
 	deleteAllUserData,
+	authenticateUser
 } from '../controllers/auth.js';
 
 const router = express.Router();
@@ -22,5 +23,7 @@ router.delete('/deleteUserData/:id', deleteUserData); // delete user
 router.delete('/deleteAllUserData', deleteAllUserData); // delete all user
 
 router.put('/updateUserData/:id', updateUserData); // update user
+
+router.post('/authenticateUser', authenticateUser); // authenticate user
 
 export default router;

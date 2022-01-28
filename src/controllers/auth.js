@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt'; // import bcryptjs
 import User from '../models/userModel'; // import user model
+import isEmail from 'validator/lib/isEmail';
+
 import { resStatus, resError } from '../utils/utilFunction'; // for send status function
 
 // fetch user data
@@ -16,9 +18,7 @@ export const fetchUserData = async (req, res) => {
 export const fetchUserById = async (req, res) => {
   try {
     const { id } = req.params; // get id from params
-
     const user = await User.findById(id); // fetch user data by id
-
     return resStatus(req, res, { user }); // send user data
   } catch (err) {
     return resError(req, res, { err: 'sorry can not fetch user data' });
@@ -29,12 +29,15 @@ export const fetchUserById = async (req, res) => {
 export const sendUserData = async (req, res) => {
   try {
     const { name, email, password, mobile, garageName, garageAddress } = req.body;
-
     // check if email is already exist
     const user = await User.findOne({ email });
-
     if (user) {
       return resError(req, res, { err: 'Email already exists' });
+    }
+
+    // validate email using isEmail
+    if (!isEmail(email)) {
+      return resError(req, res, { err: 'Invalid email' });
     }
 
     // promise for hash password, name, email, mobile, garageName, garageAddress and create user
@@ -59,6 +62,7 @@ export const sendUserData = async (req, res) => {
 
     return resStatus(req, res, { newUser });
   } catch (error) {
+    console.log(error);
     return resError(req, res, { err: 'Data is not inserted' });
   }
 };
@@ -101,5 +105,24 @@ export const updateUserData = async (req, res) => {
     return resStatus(req, res, { user });
   } catch (error) {
     return resError(req, res, { err: 'sorry can not update user' });
+  }
+};
+
+// authenticate user
+export const authenticateUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return resError(req, res, { err: 'Invalid email' });
+    }
+    const isPassword = await bcrypt.compare(password, user.password);
+    if (!isPassword) {
+      return resError(req, res, { err: 'Invalid password' });
+    }
+    return resStatus(req, res, { user });
+  } catch (err) {
+    return resError(req, res, { err: 'sorry can not authenticate user' });
   }
 };
