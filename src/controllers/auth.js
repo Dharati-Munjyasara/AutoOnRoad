@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import bcrypt from 'bcrypt'; // import bcryptjs'
 
 import User from '../models/userModel'; // import user model
@@ -6,6 +5,9 @@ import User from '../models/userModel'; // import user model
 import isEmail from 'validator/lib/isEmail';
 
 import { resStatus, resError } from '../utils/utilFunction'; // for send status function
+
+import jwt from 'jsonwebtoken';
+
 
 // fetch user data
 export const fetchUserData = async (req, res) => {
@@ -32,8 +34,9 @@ export const fetchUserById = async (req, res) => {
 export const sendUserData = async (req, res) => {
   try {
     const { name, email, password, mobile, garageName, garageAddress } = req.body;
-    // check if email is already exist
+    // check if name , email is already exist
     const user = await User.findOne({ email });
+
     if (user) {
       return resError(req, res, { err: 'Email already exists' });
     }
@@ -114,8 +117,8 @@ export const updateUserData = async (req, res) => {
 export const authenticateUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-
     const user = await User.findOne({ email });
+
     if (!user) {
       return resError(req, res, { err: 'Invalid email' });
     }
@@ -123,10 +126,16 @@ export const authenticateUser = async (req, res) => {
     if (!isPassword) {
       return resError(req, res, { err: 'Invalid password' });
     }
-    return resStatus(req, res, { user });
+
+    // authenticate user with jwt
+    jwt.sign({ user }, 'secretkey', { expiresIn: '24h' }, (err, token) => {
+      if (err) {
+        return resError(req, res, { err: 'sorry can not signup user' });
+      }
+      return resStatus(req, res, { user, token });
+    });
   } catch (err) {
     return resError(req, res, { err: 'sorry can not authenticate user' });
   }
 };
 
-// authenticate user
