@@ -1,6 +1,8 @@
 /* eslint-disable max-len */
-import bcrypt from 'bcrypt'; // import bcryptjs
+import bcrypt from 'bcrypt'; // import bcryptjs'
+
 import User from '../models/userModel'; // import user model
+
 import isEmail from 'validator/lib/isEmail';
 
 import { resStatus, resError } from '../utils/utilFunction'; // for send status function
@@ -59,9 +61,8 @@ export const sendUserData = async (req, res) => {
     });
 
     await newUser.save(); // save user data
-    console.log(newUser);
-
     return resStatus(req, res, { newUser });
+
   } catch (error) {
     console.log(error);
     return resError(req, res, { err: 'Data is not inserted' });
@@ -127,3 +128,5 @@ export const authenticateUser = async (req, res) => {
     return resError(req, res, { err: 'sorry can not authenticate user' });
   }
 };
+
+// authenticate user
