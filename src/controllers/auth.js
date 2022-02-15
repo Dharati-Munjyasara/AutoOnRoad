@@ -8,6 +8,8 @@ import { resStatus, resError } from '../utils/utilFunction'; // for send status 
 
 import jwt from 'jsonwebtoken';
 
+// import nodeMailer 
+import nodemailer from 'nodemailer';
 
 // fetch user data
 export const fetchUserData = async (req, res) => {
@@ -35,6 +37,7 @@ export const fetchUserById = async (req, res) => {
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password, mobile, garageName, garageAddress } = req.body;
+
     // check if name , email is already exist
     const user = await User.findOne({ email });
 
@@ -47,7 +50,8 @@ export const registerUser = async (req, res) => {
       return resError(req, res, { err: 'Invalid email' });
     }
 
-    // promise for hash password, name, email, mobile, garageName, garageAddress and create user
+    /* promise required for async await
+    promise for hash password, name, email, mobile, garageName, garageAddress and create user */
     const [hashPassword, hashMobile, hashGarageName, hashGarageAddress] = await Promise.all([
       bcrypt.hash(password, 10),
       bcrypt.hash(mobile, 10),
@@ -55,6 +59,7 @@ export const registerUser = async (req, res) => {
       bcrypt.hash(garageAddress, 10),
     ]);
 
+    // create user
     const newUser = new User({
       name,
       email,
@@ -63,6 +68,30 @@ export const registerUser = async (req, res) => {
       garageName: hashGarageName,
       garageAddress: hashGarageAddress
     });
+
+    // sending email using nodemailer
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      secure: true,
+      auth: {
+        user: 'pratikgamer81@gmail.com',
+        pass: 'Gamingis007'
+      },
+    });
+
+    // send mail with defined transport object
+    const info = await transporter.sendMail({
+      from: 'showking00765@gmail.com', // sender address
+      to: email, // list of receivers
+      subject: "Account registration", // Subject line
+      text: "Thank you for creating account", // plain text body
+    });
+
+    console.log("Message sent: %s", info.messageId);
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+    // Preview only available when sending through an Ethereal account
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 
     await newUser.save(); // save user data
     return resStatus(req, res, { newUser });
@@ -113,8 +142,6 @@ export const updateUserData = async (req, res) => {
     return resError(req, res, { err: 'sorry can not update user' });
   }
 };
-
-
 
 // authenticate user
 export const authenticateUser = async (req, res) => {
