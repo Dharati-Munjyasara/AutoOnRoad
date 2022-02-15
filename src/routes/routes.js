@@ -1,9 +1,8 @@
 import express from 'express';
 
-import { verifyToken } from '../middleware/auth.js';
 
 import {
-	sendUserData,
+	registerUser,
 	fetchUserData,
 	fetchUserById,
 	deleteUserData,
@@ -12,7 +11,6 @@ import {
 	authenticateUser
 
 } from '../controllers/auth.js';
-import { verifyToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -20,9 +18,9 @@ router.get('/fetchUserData', fetchUserData); // fetch user data
 
 router.get('/fetchUserById/:id', fetchUserById); // fetch user by id 
 
-router.post('/registerUser', sendUserData); // send user data
+router.post('/registerUser', registerUser); // send user data
 
-router.delete('/deleteUserData/:id', verifyToken, deleteUserData); // delete user
+router.delete('/deleteUserData/:id', deleteUserData); // delete user
 
 router.delete('/deleteAllUserData', deleteAllUserData); // delete all user
 

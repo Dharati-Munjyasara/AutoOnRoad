@@ -1,7 +1,8 @@
 /* The header consists of metadata including the type of token and the hashing algorithm used to sign the token. 
 The payload contains the claims data that the token is encoding. */
 
-const jwt = require('jsonwebtoken');
+import pkg from 'jsonwebtoken'; // import jwt
+const { jwt } = pkg;
 require('dotenv').config();  // import .env
 
 // verifytoken 
@@ -19,4 +20,5 @@ const verifyToken = ((req, res, next) => {
   next();
 });
 
-module.exports = { verifyToken }; // export module 
+// export default verifyToken;
+export default verifyToken;

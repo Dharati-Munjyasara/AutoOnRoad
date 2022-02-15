@@ -30,8 +30,9 @@ export const fetchUserById = async (req, res) => {
   }
 }
 
+
 // send user data to user model 
-export const sendUserData = async (req, res) => {
+export const registerUser = async (req, res) => {
   try {
     const { name, email, password, mobile, garageName, garageAddress } = req.body;
     // check if name , email is already exist
@@ -113,6 +114,8 @@ export const updateUserData = async (req, res) => {
   }
 };
 
+
+
 // authenticate user
 export const authenticateUser = async (req, res) => {
   try {
@@ -139,3 +142,4 @@ export const authenticateUser = async (req, res) => {
   }
 };
 
+// collection and module configuration 
