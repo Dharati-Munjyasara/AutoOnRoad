@@ -87,6 +87,9 @@ export const registerUser = async (req, res) => {
       text: "Thank you for creating account", // plain text body
     });
 
+    // send otp at the time of registration
+    const otp = Math.floor(Math.random() * 100000);
+
     console.log("Message sent: %s", info.messageId);
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
@@ -152,6 +155,7 @@ export const authenticateUser = async (req, res) => {
     if (!user) {
       return resError(req, res, { err: 'Invalid email' });
     }
+
     const isPassword = await bcrypt.compare(password, user.password);
     if (!isPassword) {
       return resError(req, res, { err: 'Invalid password' });
