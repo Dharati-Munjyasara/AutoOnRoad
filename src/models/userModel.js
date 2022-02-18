@@ -7,7 +7,7 @@ import isEmail from 'validator/lib/isEmail';
 const { Schema, model } = mongoose;
 
 const userSchema = new Schema({
-		name: {
+	name: {
 		type: String,
 		required: false,
 		unique: true,
@@ -36,6 +36,14 @@ const userSchema = new Schema({
 		type: String,
 		required: false
 	},
+	createdAt: {
+		type: Date,
+		default: Date.now
+	},
+	updatedAt: {
+		type: Date,
+		default: Date.now
+	}
 }); // userSchema completed
 
 // validate user data using Joi

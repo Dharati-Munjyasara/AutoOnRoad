@@ -11,6 +11,10 @@ import {
 
 } from '../controllers/auth.js';
 
+import {
+	createOTP,
+} from '../controllers/mailAuth.js';
+
 const router = express.Router();
 
 router.get('/fetchUserData', fetchUserData); // fetch user data
@@ -26,5 +30,7 @@ router.delete('/deleteAllUserData', deleteAllUserData); // delete all user
 router.put('/updateUserData/:id', updateUserData); // update user
 
 router.post('/loginUser', authenticateUser); // authenticate user
+
+router.post('/createOTP', createOTP); //otp send
 
 export default router;

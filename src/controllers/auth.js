@@ -8,8 +8,7 @@ import { resStatus, resError } from '../utils/utilFunction'; // for send status 
 
 import jwt from 'jsonwebtoken';
 
-// import nodeMailer 
-import nodemailer from 'nodemailer';
+import { sendOtp, sendRegisterEmail } from '../utils/emailSender';
 
 // fetch user data
 export const fetchUserData = async (req, res) => {
@@ -69,32 +68,11 @@ export const registerUser = async (req, res) => {
       garageAddress: hashGarageAddress
     });
 
-    // sending email using nodemailer
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      secure: true,
-      auth: {
-        user: 'pratikgamer81@gmail.com',
-        pass: 'Gamingis007'
-      },
-    });
 
-    // send mail with defined transport object
-    const info = await transporter.sendMail({
-      from: 'showking00765@gmail.com', // sender address
-      to: email, // list of receivers
-      subject: "Account registration", // Subject line
-      text: "Thank you for creating account", // plain text body
-    });
-
-    // send otp at the time of registration
-    const otp = Math.floor(Math.random() * 100000);
-
-    console.log("Message sent: %s", info.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-    // Preview only available when sending through an Ethereal account
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    // use sendOtp function to send otp to user
+    await sendOtp(req, res, { email });
+    /* await sendRegisterEmail({ email }); */
+    console.log(sendRegisterEmail);
 
     await newUser.save(); // save user data
     return resStatus(req, res, { newUser });
@@ -110,7 +88,7 @@ export const deleteUserData = async (req, res) => {
   try {
     const { id } = req.body;
     const user = await User.findByIdAndDelete(id);
-    return resStatus(req, res, { user });
+    return resStatus(req, res, { user }, { msg: 'User deleted successfully' });
   } catch (err) {
     return resError(req, res, { err: 'sorry can not delete user' });
   }
