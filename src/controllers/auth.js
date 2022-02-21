@@ -150,5 +150,3 @@ export const authenticateUser = async (req, res) => {
     return resError(req, res, { err: 'sorry can not authenticate user' });
   }
 };
-
-// collection and module configuration 

@@ -10,7 +10,6 @@ export const sendOtp = async (req, res, emailObj) => {
 	try {
 
 		await createOTP(req, res);
-
 		// send otp to user in mail using createOtp function
 		const transporter = nodemailer.createTransport({
 			service: 'gmail',
