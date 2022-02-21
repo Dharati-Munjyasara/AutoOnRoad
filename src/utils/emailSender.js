@@ -6,10 +6,10 @@ import { createOTP } from '../controllers/mailAuth';
 
 // create function for send otp
 // emailObj will return the email from the request body from auth.js
-export const sendOtp = async (req, res, emailObj) => {
+export const sendOtp = async (req, res, emailObj, otpObj) => {
 	try {
-
 		await createOTP(req, res);
+		console.log(otpObj.otp);
 		// send otp to user in mail using createOtp function
 		const transporter = nodemailer.createTransport({
 			service: 'gmail',
@@ -23,8 +23,11 @@ export const sendOtp = async (req, res, emailObj) => {
 			from: 'showking00765@gmail.com',
 			to: emailObj.email,
 			subject: 'OTP',
-			text: `Your OTP is ${emailObj.otp}`
+			// otp getting undefined error
+			// send otp from creteOtp functionm as a text
+			text: `Your OTP is ${otpObj.otp}`
 		};
+
 
 		transporter.sendMail(mailOptions, function (error, info) {
 			if (error) {
@@ -40,7 +43,6 @@ export const sendOtp = async (req, res, emailObj) => {
 		return resError(req, res, { err: 'sorry can not send otp' });
 	}
 };
-
 
 //create function for sending email
 export const sendRegisterEmail = async (emailObj) => {
