@@ -72,7 +72,6 @@ export const registerUser = async (req, res) => {
     // use sendOtp function to send otp to user
     await sendOtp(req, res, { email });
     /* await sendRegisterEmail({ email }); */
-    console.log(sendRegisterEmail);
 
     await newUser.save(); // save user data
     return resStatus(req, res, { newUser });
