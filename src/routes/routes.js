@@ -14,6 +14,7 @@ import {
 import {
 	createOTP,
 } from '../controllers/mailAuth.js';
+import { sendOtp } from '../utils/emailSender.js';
 
 const router = express.Router();
 
@@ -32,5 +33,8 @@ router.put('/updateUserData/:id', updateUserData); // update user
 router.post('/loginUser', authenticateUser); // authenticate user
 
 router.post('/createOTP', createOTP); //otp send
+
+// send otp
+router.post('/sendOtp', sendOtp)
 
 export default router;

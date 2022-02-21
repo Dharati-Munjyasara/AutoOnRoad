@@ -9,6 +9,7 @@ import { resStatus, resError } from '../utils/utilFunction'; // for send status 
 import jwt from 'jsonwebtoken';
 
 import { sendOtp, sendRegisterEmail } from '../utils/emailSender';
+import { createOTP } from './mailAuth';
 
 // fetch user data
 export const fetchUserData = async (req, res) => {
@@ -70,8 +71,9 @@ export const registerUser = async (req, res) => {
 
 
     // use sendOtp function to send otp to user
+
     await sendOtp(req, res, { email });
-    /* await sendRegisterEmail({ email }); */
+    // await sendRegisterEmail({ email });
 
     await newUser.save(); // save user data
     return resStatus(req, res, { newUser });
