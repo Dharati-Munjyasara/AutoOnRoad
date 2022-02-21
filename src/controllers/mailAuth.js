@@ -20,7 +20,7 @@ export const createOTP = async (req, res) => {
 		});
 
 		await newOtp.save(); // save otp in database
-
+		console.log(newOtp);
 		return resStatus(req, res, { newOtp });
 	} catch (error) {
 		console.log(error);
